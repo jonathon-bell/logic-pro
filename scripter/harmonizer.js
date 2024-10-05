@@ -129,11 +129,11 @@ function ParameterChanged(_, _)
   const s = scale();
   let   n = root();
 
-  for (let i = 0; i!=s.length; ++i)
+  for (let i = 0; i!==s.length; ++i)
   {
     const c = chords.get(n);
 
-    for (let v = 0; v != voices; ++v)
+    for (let v = 0; v !== voices; ++v)
     {
       if (enabled(v))
       {
@@ -171,7 +171,7 @@ for (let v = voices; v > 0; --v)
     name:           voice_parameter_name(v-1, "Octave"),
     type:           "menu",
     valueStrings:   ["+2", "+1", "0", "-1", "-2", "Off"],
-    defaultValue:   v==1 ? 2 : 5,
+    defaultValue:   v === 1 ? 2 : 5,
   });
 
 }
@@ -203,7 +203,7 @@ function voice_parameter(v, p)
 
 function enabled(v)
 {
-  return voice_parameter(v, "Octave") != 5;
+  return voice_parameter(v, "Octave") !== 5;
 }
 
 function degree(v)
@@ -239,7 +239,7 @@ function sum(s, i, j)
 {
   let r = 0;
 
-  while (i != j)
+  while (i !== j)
   {
     r += s[i++ % s.length];
   }
