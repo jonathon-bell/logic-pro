@@ -131,7 +131,7 @@ function ParameterChanged(_, _)
 
   for (let i = 0; i!=s.length; ++i)
   {
-    const c = [];
+    const c = chords.get(n);
 
     for (let v = 0; v != voices; ++v)
     {
@@ -141,7 +141,6 @@ function ParameterChanged(_, _)
       }
     }
 
-    chords.set(n, c);
     n = (n + s[i]) % 12;
   }
 }
