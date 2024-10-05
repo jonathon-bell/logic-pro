@@ -110,9 +110,8 @@ function HandleMIDI(e)
   if (e instanceof Note)
   {
     const p = e.pitch;
-    const c = chords.get(p % 12);
 
-    for (const i of c)
+    for (const i of chords.get(p % 12))
     {
       e.pitch = p + i;
       e.send();
