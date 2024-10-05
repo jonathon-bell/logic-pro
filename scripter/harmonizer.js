@@ -46,37 +46,37 @@ const scales =
 
 // Diatonic
 
-  [[2,2,1,2,2,2,1],           "Ionian - Major"                              ],
+  [[2,2,1,2,2,2,1],           "Ionian, Major"                               ],
   [[2,1,2,2,2,1,2],           "Dorian"                                      ],
   [[1,2,2,2,1,2,2],           "Phrygian"                                    ],
   [[2,2,2,1,2,2,1],           "Lydian"                                      ],
   [[2,2,1,2,2,1,2],           "Myxolydian"                                  ],
-  [[2,1,2,2,1,2,2],           "Aeolian - Minor"                             ],
+  [[2,1,2,2,1,2,2],           "Aeolian, Minor"                              ],
   [[1,2,2,1,2,2,2],           "Locrian"                                     ],
 
 // Melodic Minor
 
   [[2,1,2,2,2,2,1],           "Melodic Minor"                               ],
-  [[1,2,2,2,2,1,2],          "Dorian ♭2 - Phrygian ♮6"                      ],
-  [[2,2,2,2,1,2,1],          "Lydian ♯5 - Lydian Augmented" ],
-  [[2,2,2,1,2,1,2],          "Lydian ♭7 - Lydian Dominant"],
-  [[2,2,1,2,1,2,2],           "Mixolydian ♭6 - Melodic Major"               ],
-  [[2,1,2,1,2,2,2],          "Dorian ♭5 - Locrian ♮2 - Half Diminished"     ],
-  [[1,2,1,2,2,2,2],           "Altered Dominant - Superlocrian"             ],
+  [[1,2,2,2,2,1,2],           "Dorian ♭2, Phrygian ♮6"                      ],
+  [[2,2,2,2,1,2,1],           "Lydian ♯5, Lydian Augmented"                 ],
+  [[2,2,2,1,2,1,2],           "Lydian ♭7, Lydian Dominant"                  ],
+  [[2,2,1,2,1,2,2],           "Mixolydian ♭6, Melodic Major"                ],
+  [[2,1,2,1,2,2,2],           "Dorian ♭5, Locrian ♮2, Half Diminished"      ],
+  [[1,2,1,2,2,2,2],           "Altered Dominant, Superlocrian"              ],
 
 // Harmonic Minor
 
   [[2,1,2,2,1,3,1],           "Harmonic Minor"                              ],
   [[1,2,2,1,3,1,2],           "Locrian ♯6"                                  ],
-  [[2,2,1,3,1,2,1],           "Ionian ♯5 - Ionian Augmented"                ],
-  [[2,1,3,1,2,1,2],           "Dorian ♯4 - Romanian"                        ],
-  [[1,3,1,2,1,2,2],           "Phrygian ♯3 - Phrygian Dominant"             ],
-  [[1,2,1,2,2,1,3],           "Myxolydian ♯1 - Ultralocrian"                ],
+  [[2,2,1,3,1,2,1],           "Ionian ♯5, Ionian Augmented"                 ],
+  [[2,1,3,1,2,1,2],           "Dorian ♯4, Romanian"                         ],
+  [[1,3,1,2,1,2,2],           "Phrygian ♯3, Phrygian Dominant"              ],
+  [[1,2,1,2,2,1,3],           "Myxolydian ♯1, Ultralocrian"                 ],
   [[3,1,2,1,2,2,1],           "Lydian ♯2"                                   ],
 
 // Double Harmonic
 
-  [[1,3,1,2,1,3,1],           "Double Harmonic - Arabic - Gypsy - Byzantine"],
+  [[1,3,1,2,1,3,1],           "Double Harmonic, Arabic, Gypsy, Byzantine"   ],
   [[3,1,2,1,3,1,1],           "Lydian ♯2 ♯6"                                ],
   [[1,2,1,3,1,1,3],           "Ultraphrygian"                               ],
   [[2,1,3,1,1,3,1],           "Hungarian Minor"                             ],
@@ -95,9 +95,9 @@ const scales =
 // Pentatonic
 
   [[2,2,3,2,3],               "Major Pentatonic"                            ],
-  [[2,3,2,3,2],               "Suspended Pentatonic - Egyptian"             ],
-  [[3,2,3,2,2],               "Blues Minor Pentatonic - Man Gong"           ],
-  [[2,3,2,2,3],               "Blues Major Pentatonic - Ritusen"            ],
+  [[2,3,2,3,2],               "Suspended Pentatonic, Egyptian"              ],
+  [[3,2,3,2,2],               "Blues Minor Pentatonic, Man Gong"            ],
+  [[2,3,2,2,3],               "Blues Major Pentatonic, Ritusen"             ],
   [[3,2,2,3,2],               "Minor Pentatonic"                            ],
 ];
 
@@ -152,7 +152,7 @@ var PluginParameters =
   {
     name:           "Scale Root",
     type:           'menu',
-    valueStrings:   ["C", "C♯ - D♭", "D", "D♯ - E♭", "E", "F", "F♯ - G♭", "G", "G♯ - A♭", "A", "A♯ - B♭", "B"],
+    valueStrings:   ["C", "C♯, D♭", "D", "D♯, E♭", "E", "F", "F♯, G♭", "G", "G♯, A♭", "A", "A♯, B♭", "B"],
     defaultValue:   0,
   }
   ,
@@ -208,7 +208,7 @@ function enabled(v)
 
 function degree(v)
 {
-  return voice_parameter(v, "Degree") - 1;
+  return voice_parameter(v, "Degree"), 1;
 }
 
 function octave(v)
