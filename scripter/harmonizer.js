@@ -41,79 +41,70 @@ const scales =
 
 // Symmetric Diminished
 
-  [[2,1,2,1,2,1,2,1], "Whole Half"                                          ],
-  [[1,2,1,2,1,2,1,2], "Half Whole"                                          ],
+  [[2,1,2,1,2,1,2,1],         "Whole Half"                                  ],
+  [[1,2,1,2,1,2,1,2],         "Half Whole"                                  ],
 
 // Diatonic
 
-  [[2,2,1,2,2,2,1], "Ionian - Major"                                        ],
-  [[2,1,2,2,2,1,2], "Dorian"                                                ],
-  [[1,2,2,2,1,2,2], "Phrygian"                                              ],
-  [[2,2,2,1,2,2,1], "Lydian"                                                ],
-  [[2,2,1,2,2,1,2], "Myxolydian"                                            ],
-  [[2,1,2,2,1,2,2], "Aeolian - Minor"                                       ],
-  [[1,2,2,1,2,2,2], "Locrian"                                               ],
+  [[2,2,1,2,2,2,1],           "Ionian - Major"                              ],
+  [[2,1,2,2,2,1,2],           "Dorian"                                      ],
+  [[1,2,2,2,1,2,2],           "Phrygian"                                    ],
+  [[2,2,2,1,2,2,1],           "Lydian"                                      ],
+  [[2,2,1,2,2,1,2],           "Myxolydian"                                  ],
+  [[2,1,2,2,1,2,2],           "Aeolian - Minor"                             ],
+  [[1,2,2,1,2,2,2],           "Locrian"                                     ],
 
 // Melodic Minor
 
-  [[2,1,2,2,2,2,1], "Melodic Minor"                                         ],
-  [[1,2,2,2,2,1,2], "Dorian ♭2 - Phrygian ♮6"                               ],
-  [[2,2,2,2,1,2,1], "Lydian ♯5 - Lydian Augmented - Superlydian - Acoustic" ],
-  [[2,2,2,1,2,1,2], "Lydian ♭7 - Lydian Dominant - Mixolydian ♯4 - Overtone"],
-  [[2,2,1,2,1,2,2], "Mixolydian ♭6 - Melodic Major"                         ],
-  [[2,1,2,1,2,2,2], "Dorian ♭5 - Locrian ♮2 - Half Diminished"              ],
-  [[1,2,1,2,2,2,2], "Altered Dominant - Superlocrian"                       ],
+  [[2,1,2,2,2,2,1],           "Melodic Minor"                               ],
+  [[1,2,2,2,2,1,2],          "Dorian ♭2 - Phrygian ♮6"                      ],
+  [[2,2,2,2,1,2,1],          "Lydian ♯5 - Lydian Augmented" ],
+  [[2,2,2,1,2,1,2],          "Lydian ♭7 - Lydian Dominant"],
+  [[2,2,1,2,1,2,2],           "Mixolydian ♭6 - Melodic Major"               ],
+  [[2,1,2,1,2,2,2],          "Dorian ♭5 - Locrian ♮2 - Half Diminished"     ],
+  [[1,2,1,2,2,2,2],           "Altered Dominant - Superlocrian"             ],
 
 // Harmonic Minor
 
-  [[2,1,2,2,1,3,1], "Harmonic Minor"                                        ],
-  [[1,2,2,1,3,1,2], "Locrian ♯6"                                            ],
-  [[2,2,1,3,1,2,1], "Ionian ♯5 - Ionian Augmented"                          ],
-  [[2,1,3,1,2,1,2], "Dorian ♯4 - Romanian"                                  ],
-  [[1,3,1,2,1,2,2], "Phrygian ♯3 - Phrygian Dominant"                       ],
-  [[1,2,1,2,2,1,3], "Myxolydian ♯1 - Ultralocrian"                          ],
-  [[3,1,2,1,2,2,1], "Lydian ♯2"                                             ],
+  [[2,1,2,2,1,3,1],           "Harmonic Minor"                              ],
+  [[1,2,2,1,3,1,2],           "Locrian ♯6"                                  ],
+  [[2,2,1,3,1,2,1],           "Ionian ♯5 - Ionian Augmented"                ],
+  [[2,1,3,1,2,1,2],           "Dorian ♯4 - Romanian"                        ],
+  [[1,3,1,2,1,2,2],           "Phrygian ♯3 - Phrygian Dominant"             ],
+  [[1,2,1,2,2,1,3],           "Myxolydian ♯1 - Ultralocrian"                ],
+  [[3,1,2,1,2,2,1],           "Lydian ♯2"                                   ],
 
 // Double Harmonic
 
-  [[1,3,1,2,1,3,1], "Double Harmonic - Arabic - Gypsy - Byzantine"          ],
-  [[3,1,2,1,3,1,1], "Lydian ♯2 ♯6"                                          ],
-  [[1,2,1,3,1,1,3], "Ultraphrygian"                                         ],
-  [[2,1,3,1,1,3,1], "Hungarian Minor"                                       ],
-  [[1,3,1,1,3,1,2], "Oriental"                                              ],
-  [[3,1,1,3,1,2,1], "Ionian Augmented ♯2"                                   ],
-  [[1,1,3,1,2,1,3], "Locrian 𝄫3 𝄫7"                                         ],
+  [[1,3,1,2,1,3,1],           "Double Harmonic - Arabic - Gypsy - Byzantine"],
+  [[3,1,2,1,3,1,1],           "Lydian ♯2 ♯6"                                ],
+  [[1,2,1,3,1,1,3],           "Ultraphrygian"                               ],
+  [[2,1,3,1,1,3,1],           "Hungarian Minor"                             ],
+  [[1,3,1,1,3,1,2],           "Oriental"                                    ],
+  [[3,1,1,3,1,2,1],           "Ionian Augmented ♯2"                         ],
+  [[1,1,3,1,2,1,3],           "Locrian 𝄫3 𝄫7"                               ],
 
 // Hexatonic
 
-  [[2,2,2,2,2,2],   "Whole Tone"                                            ],
-  [[2,2,2,3,1,2],   "Prometheus"                                            ],
-  [[3,1,3,1,3,1],   "Augmented"                                             ],
-  [[1,2,3,1,3,2],   "Tritone"                                               ],
-  [[3,2,1,1,3,2],   "Blues"                                                 ],
+  [[2,2,2,2,2,2],             "Whole Tone"                                  ],
+  [[2,2,2,3,1,2],             "Prometheus"                                  ],
+  [[3,1,3,1,3,1],             "Augmented"                                   ],
+  [[1,2,3,1,3,2],             "Tritone"                                     ],
+  [[3,2,1,1,3,2],             "Blues"                                       ],
 
 // Pentatonic
 
-  [[2,2,3,2,3],     "Major Pentatonic"                                      ],
-  [[2,3,2,3,2],     "Suspended Pentatonic - Egyptian"                       ],
-  [[3,2,3,2,2],     "Blues Minor Pentatonic - Man Gong"                     ],
-  [[2,3,2,2,3],     "Blues Major Pentatonic - Ritusen"                      ],
-  [[3,2,2,3,2],     "Minor Pentatonic"                                      ],
+  [[2,2,3,2,3],               "Major Pentatonic"                            ],
+  [[2,3,2,3,2],               "Suspended Pentatonic - Egyptian"             ],
+  [[3,2,3,2,2],               "Blues Minor Pentatonic - Man Gong"           ],
+  [[2,3,2,2,3],               "Blues Major Pentatonic - Ritusen"            ],
+  [[3,2,2,3,2],               "Minor Pentatonic"                            ],
 ];
 
-/**
- *
- */
 const voices = 6;
 
-/**
- * Maps notes to chord vodings,
- */
 var chords;
 
-/**
- * @param  e  A MIDI event.
- */
 function HandleMIDI(e)
 {
   if (e instanceof Note)
@@ -121,33 +112,16 @@ function HandleMIDI(e)
     const p = e.pitch;
     const c = chords.get(p % 12);
 
-    c.forEach(i => {e.pitch = p + i; e.send();});
+    for (const i of c)
+    {
+      e.pitch = p + i;
+      e.send();
+    }
   }
   else
   {
     e.send();
   }
-}
-
-/**
- * Sums the elements of the given array in the range '[i, j]'.
- *
- * @param  s  An array of integers.
- * @param  f  An index to sum from.
- * @param  t  An index to sum to.
- *
- * @return The sum of the elements of 's' in the range '[i, j)'.
- */
-function sum(s, i, j)
-{
-  let r = 0;
-
-  while (i != j)
-  {
-    r += s[i++ % s.length];
-  }
-
-  return r;
 }
 
 function ParameterChanged(_, _)
@@ -252,6 +226,27 @@ function scale()
 function root()
 {
   return GetParameter("Scale Root");
+}
+
+/**
+ * Sums the elements of the given array in the range '[i, j]'.
+ *
+ * @param  s  An array of integers.
+ * @param  f  An index to sum from.
+ * @param  t  An index to sum to.
+ *
+ * @return The sum of the elements of 's' in the range '[i, j)'.
+ */
+function sum(s, i, j)
+{
+  let r = 0;
+
+  while (i != j)
+  {
+    r += s[i++ % s.length];
+  }
+
+  return r;
 }
 
 //****************************************************************************
