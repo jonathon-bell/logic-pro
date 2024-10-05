@@ -208,7 +208,7 @@ function enabled(v)
 
 function degree(v)
 {
-  return voice_parameter(v, "Degree"), 1;
+  return voice_parameter(v, "Degree") - 1;
 }
 
 function octave(v)
