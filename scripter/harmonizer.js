@@ -184,8 +184,8 @@ for (let v = voices; v > 0; --v)
     name:           voice_parameter_name(v-1, "Degree"),
     type:           "lin",
     minValue:       1,
-    maxValue:       13,
-    numberOfSteps:  12,
+    maxValue:       24,
+    numberOfSteps:  23,
     defaultValue:   0,
   });
 }
