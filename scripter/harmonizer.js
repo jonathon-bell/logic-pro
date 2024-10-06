@@ -10,7 +10,7 @@
 //*
 //*              a Root note, represented as an integer in the range [0, 12).
 //*
-//*              a Chord Scale, represented as a sequence of positive integers
+//*              a Scale Type, represented as a sequence of positive integers
 //*              that sums to 12.
 //*
 //*            and a Chord Voicing as a set of Voices, each comprising:
@@ -20,7 +20,7 @@
 //*
 //*              an Octave, an integral offset
 //*
-//*   Chord Scale
+//*   Scale Type
 //*   voicing
 //*   degree
 //*
@@ -125,9 +125,10 @@ function HandleMIDI(e)
 
 function ParameterChanged(_, _)
 {
-  chords  = new Map(Array.from({length: 12}, (_, i) => [i, []]));
   const s = scale();
   let   n = root();
+
+  chords = new Map(Array.from({length: 12}, (_, i) => [i, []]));
 
   for (let i = 0; i!==s.length; ++i)
   {
@@ -157,7 +158,7 @@ var PluginParameters =
   }
   ,
   {
-    name:           "Chord Scale",
+    name:           "Scale Type",
     type:           'menu',
     valueStrings:   scales.map((s, _) => s[1]),
     defaultValue:   0,
@@ -218,7 +219,7 @@ function octave(v)
 
 function scale()
 {
-  return scales[GetParameter("Chord Scale")][0];
+  return scales[GetParameter("Scale Type")][0];
 }
 
 function root()
