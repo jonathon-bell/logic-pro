@@ -4,7 +4,7 @@
 //*  Version : $Header:$
 //*
 //*
-//*  Purpose : Harmonizes pitches using a specified scale and chord vociing.
+//*  Purpose : Harmonizes pitches using a specified scale and chord voicing.
 //*
 //*            The GUI specifies a Scale as:
 //*
@@ -19,13 +19,6 @@
 //*              steps to transpose the incoming pitch by.
 //*
 //*              an Octave, an integral offset
-//*
-//*   Scale Type
-//*   voicing
-//*   degree
-//*
-//*  pitch
-//*  note
 //*
 //*  See Also: https://www.musios.app/logic-pro-scripter/
 //*            for an alternate description of the Logic Pro Scripter API.
@@ -151,8 +144,8 @@ function Idle()
         }
       }
 
-      n+= s[i]
-      n%= 12;
+      n += s[i]
+      n %= 12;
     }
 
     PluginParameters[2].valueStrings = [scale_notes(), "", ""];
