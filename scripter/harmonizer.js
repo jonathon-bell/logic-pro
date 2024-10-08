@@ -136,9 +136,9 @@ function ParameterChanged(_, _)
 
     for (let v = 0; v !== voices; ++v)
     {
-      if (enabled(v))
+      if (voice_enabled(v))
       {
-        c.push(sum(s, i, i + degree(v)) + octave(v));
+        c.push(sum(s, i, i + voice_degree(v)) + voice_octave(v));
       }
     }
 
@@ -202,9 +202,19 @@ function scale_type()
   return scales[GetParameter(1)][0];
 }
 
-function voice_parameter_name(v, p)
+function voice_enabled(v)
 {
-  return "Voice " + (v + 1) + " " + p;
+  return voice_parameter(v, "Octave") !== 5;
+}
+
+function voice_degree(v)
+{
+  return voice_parameter(v, "Degree") - 1;
+}
+
+function voice_octave(v)
+{
+  return  [+24, +12, 0, -12, -24][voice_parameter(v, "Octave")];
 }
 
 function voice_parameter(v, p)
@@ -212,19 +222,9 @@ function voice_parameter(v, p)
   return GetParameter(voice_parameter_name(v, p));
 }
 
-function enabled(v)
+function voice_parameter_name(v, p)
 {
-  return voice_parameter(v, "Octave") !== 5;
-}
-
-function degree(v)
-{
-  return voice_parameter(v, "Degree") - 1;
-}
-
-function octave(v)
-{
-  return  [+24, +12, 0, -12, -24][voice_parameter(v, "Octave")];
+  return "Voice " + (v + 1) + " " + p;
 }
 
 /**
