@@ -228,24 +228,34 @@ function root()
 }
 
 /**
- * Sums the elements of the given array in the range '[i, j]'.
+ * Sums the elements of the given array with indices in the range '[i, j)'.
  *
- * @param  s  An array of integers.
- * @param  f  An index to sum from.
- * @param  t  An index to sum to.
+ * Indices 'wrap around' at the end of the array.
  *
- * @return The sum of the elements of 's' in the range '[i, j)'.
+ * For example:
+ *
+ *  sum([1, 2, 3], 0, 2)   ==   1 + 2
+ *
+ *  sum([1, 2, 3], 1, 2)   ==   2
+ *
+ *  sum([1, 2, 3], 0, 4)   ==   1 + 2 + 3 + 1
+ *
+ * @param  a  An array of integers.
+ * @param  i  An index to sum from.
+ * @param  j  An index to sum to.
+ *
+ * @return The sum of the elements of 'a' with indices in the range '[i, j)'.
  */
-function sum(s, i, j)
+function sum(a, i, j)
 {
-  let r = 0;
+  let s = 0;
 
   while (i !== j)
   {
-    r += s[i++ % s.length];
+    s += a[i++ % s.length];
   }
 
-  return r;
+  return s;
 }
 
 //****************************************************************************
