@@ -225,7 +225,12 @@ function scale_type()
 
 function voice_enabled(v)
 {
-  return voice_parameter(v, "Octave") !== 5;
+  return voice_parameter(v, "Octave") < 5;
+}
+
+function voice_octave(v)
+{
+  return [+24, +12, 0, -12, -24][voice_parameter(v, "Octave")];
 }
 
 function voice_degree(v)
@@ -233,14 +238,16 @@ function voice_degree(v)
   return voice_parameter(v, "Degree") - 1;
 }
 
-function voice_octave(v)
+function voice_parameter_index(v, p)
 {
-  return  [+24, +12, 0, -12, -24][voice_parameter(v, "Octave")];
+  return 2
+       + (p === "Degree" ? voices : 0)
+       + (voices - v - 1)
 }
 
 function voice_parameter(v, p)
 {
-  return GetParameter(voice_parameter_name(v, p));
+  return GetParameter(voice_parameter_index(v, p));
 }
 
 function voice_parameter_name(v, p)
