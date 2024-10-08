@@ -18,7 +18,7 @@
 //*              a Degree, represented as a positive integral number of scale
 //*              steps to transpose the incoming pitch by.
 //*
-//*              an Octave, an integral offset
+//*              an Octave, an integral offset.
 //*
 //*  See Also: https://www.musios.app/logic-pro-scripter/
 //*            for an alternate description of the Logic Pro Scripter API.
@@ -28,17 +28,11 @@
 
 const scales =
 [
-// Chromatic
-
   [[1,1,1,1,1,1,1,1,1,1,1,1], "Chromatic"                                   ],
-
-// Symmetric Diminished
-
+[[], "-"],
   [[2,1,2,1,2,1,2,1],         "Whole Half"                                  ],
   [[1,2,1,2,1,2,1,2],         "Half Whole"                                  ],
-
-// Diatonic
-
+[[], "-"],
   [[2,2,1,2,2,2,1],           "Ionian, Major"                               ],
   [[2,1,2,2,2,1,2],           "Dorian"                                      ],
   [[1,2,2,2,1,2,2],           "Phrygian"                                    ],
@@ -46,9 +40,7 @@ const scales =
   [[2,2,1,2,2,1,2],           "Myxolydian"                                  ],
   [[2,1,2,2,1,2,2],           "Aeolian, Minor"                              ],
   [[1,2,2,1,2,2,2],           "Locrian"                                     ],
-
-// Melodic Minor
-
+[[], "-"],
   [[2,1,2,2,2,2,1],           "Melodic Minor"                               ],
   [[1,2,2,2,2,1,2],           "Dorian ♭2, Phrygian ♮6"                      ],
   [[2,2,2,2,1,2,1],           "Lydian ♯5, Lydian Augmented"                 ],
@@ -56,9 +48,7 @@ const scales =
   [[2,2,1,2,1,2,2],           "Mixolydian ♭6, Melodic Major"                ],
   [[2,1,2,1,2,2,2],           "Dorian ♭5, Locrian ♮2, Half Diminished"      ],
   [[1,2,1,2,2,2,2],           "Altered Dominant, Superlocrian"              ],
-
-// Harmonic Minor
-
+[[], "-"],
   [[2,1,2,2,1,3,1],           "Harmonic Minor"                              ],
   [[1,2,2,1,3,1,2],           "Locrian ♯6"                                  ],
   [[2,2,1,3,1,2,1],           "Ionian ♯5, Ionian Augmented"                 ],
@@ -66,9 +56,7 @@ const scales =
   [[1,3,1,2,1,2,2],           "Phrygian ♯3, Phrygian Dominant"              ],
   [[1,2,1,2,2,1,3],           "Myxolydian ♯1, Ultralocrian"                 ],
   [[3,1,2,1,2,2,1],           "Lydian ♯2"                                   ],
-
-// Double Harmonic
-
+[[], "-"],
   [[1,3,1,2,1,3,1],           "Double Harmonic, Arabic, Gypsy, Byzantine"   ],
   [[3,1,2,1,3,1,1],           "Lydian ♯2 ♯6"                                ],
   [[1,2,1,3,1,1,3],           "Ultraphrygian"                               ],
@@ -76,17 +64,13 @@ const scales =
   [[1,3,1,1,3,1,2],           "Oriental"                                    ],
   [[3,1,1,3,1,2,1],           "Ionian Augmented ♯2"                         ],
   [[1,1,3,1,2,1,3],           "Locrian 𝄫3 𝄫7"                               ],
-
-// Hexatonic
-
+[[], "-"],
   [[2,2,2,2,2,2],             "Whole Tone"                                  ],
   [[2,2,2,3,1,2],             "Prometheus"                                  ],
   [[3,1,3,1,3,1],             "Augmented"                                   ],
   [[1,2,3,1,3,2],             "Tritone"                                     ],
   [[3,2,1,1,3,2],             "Blues"                                       ],
-
-// Pentatonic
-
+[[], "-"],
   [[2,2,3,2,3],               "Major Pentatonic"                            ],
   [[2,3,2,3,2],               "Suspended Pentatonic, Egyptian"              ],
   [[3,2,3,2,2],               "Blues Minor Pentatonic, Man Gong"            ],
