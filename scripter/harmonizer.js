@@ -194,12 +194,12 @@ for (let v = voices; v > 0; --v)
 
 function scale_root()
 {
-  return GetParameter("Scale Root");
+  return GetParameter(0);
 }
 
 function scale_type()
 {
-  return scales[GetParameter("Scale Type")][0];
+  return scales[GetParameter(1)][0];
 }
 
 function voice_parameter_name(v, p)
