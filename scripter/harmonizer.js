@@ -153,17 +153,20 @@ function Idle()
 
       n = (n + s[i]) % 12;
 
-      if (s.length !== PluginParameters[2 + voices].maxValue)
-      {
-        for (let v = 0; v !== voices; ++v)
-        {
-          PluginParameters[2 + voices + v].maxValue      = s.length;
-          PluginParameters[2 + voices + v].numberOfSteps = s.length - 1;
-        }
+    }
 
-        UpdatePluginParameters();
+    PluginParameters[2].valueStrings = [scale_notes(),"",""];
+
+    if (s.length !== PluginParameters[2 + voices].maxValue)
+    {
+      for (let v = 0; v !== voices; ++v)
+      {
+        PluginParameters[2 + voices + v].maxValue      = s.length;
+        PluginParameters[2 + voices + v].numberOfSteps = s.length - 1;
       }
     }
+
+    UpdatePluginParameters();
   }
 }
 
@@ -183,6 +186,14 @@ var PluginParameters =
     type:           "menu",
     valueStrings:   scales.map((s, _) => s[1]),
     defaultValue:   0,
+  }
+  ,
+  {
+    name:           "Scale Notes",
+    type:           "menu",
+    valueStrings:   ["", "", ""],
+    defaultValue:   0,
+    readOnly:       true,
   }
 ];
 
@@ -223,6 +234,34 @@ function scale_type()
   return scales[GetParameter(1)][0];
 }
 
+function flat_key(n)
+{
+  return 1322 & (1 << n) ? 1 : 0;
+}
+
+function note_names(k)
+{
+  return [
+    ["C", "C♯", "D", "D♯", "E", "F", "F♯", "G", "G♯", "A", "A♯", "B"],
+    ["C", "D♭", "D", "E♭", "E", "F", "G♭", "G", "A♭", "A", "B♭", "B"],
+  ][flat_key(k)];
+}
+
+function scale_notes()
+{
+  let n     = scale_root();
+  const names = note_names(n);
+  let s = names[n];
+
+  for (const i of scale_type())
+  {
+    n = (n + i) % 12;
+    s = s + " " + names[n];
+  }
+
+  return s;
+}
+
 function voice_enabled(v)
 {
   return voice_parameter(v, "Octave") < 5;
@@ -240,7 +279,7 @@ function voice_degree(v)
 
 function voice_parameter_index(v, p)
 {
-  return 2
+  return 3
        + (p === "Degree" ? voices : 0)
        + (voices - v - 1)
 }
