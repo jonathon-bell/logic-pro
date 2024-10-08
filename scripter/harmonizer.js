@@ -125,8 +125,8 @@ function HandleMIDI(e)
 
 function ParameterChanged(_, _)
 {
-  const s = scale();
-  let   n = root();
+  let   n = scale_root();
+  const s = scale_type();
 
   chords = new Map(Array.from({length: 12}, (_, i) => [i, []]));
 
@@ -192,6 +192,16 @@ for (let v = voices; v > 0; --v)
 
 //****************************************************************************
 
+function scale_root()
+{
+  return GetParameter("Scale Root");
+}
+
+function scale_type()
+{
+  return scales[GetParameter("Scale Type")][0];
+}
+
 function voice_parameter_name(v, p)
 {
   return "Voice " + (v + 1) + " " + p;
@@ -215,16 +225,6 @@ function degree(v)
 function octave(v)
 {
   return  [+24, +12, 0, -12, -24][voice_parameter(v, "Octave")];
-}
-
-function scale()
-{
-  return scales[GetParameter("Scale Type")][0];
-}
-
-function root()
-{
-  return GetParameter("Scale Root");
 }
 
 /**
@@ -252,7 +252,7 @@ function sum(a, i, j)
 
   while (i !== j)
   {
-    s += a[i++ % s.length];
+    s += a[i++ % a.length];
   }
 
   return s;
