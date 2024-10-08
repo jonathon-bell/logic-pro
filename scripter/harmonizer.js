@@ -101,9 +101,9 @@ const scales =
   [[3,2,2,3,2],               "Minor Pentatonic"                            ],
 ];
 
-const voices = 6;
-
-var chords;
+const voices  = 6;
+var   chords  = undefined;
+var   dirty   = false;
 
 function HandleMIDI(e)
 {
@@ -125,24 +125,45 @@ function HandleMIDI(e)
 
 function ParameterChanged(_, _)
 {
-  let   n = scale_root();
-  const s = scale_type();
+  dirty = true;
+}
 
-  chords = new Map(Array.from({length: 12}, (_, i) => [i, []]));
-
-  for (let i = 0; i!==s.length; ++i)
+function Idle()
+{
+  if (dirty)
   {
-    const c = chords.get(n);
+    dirty = false;
 
-    for (let v = 0; v !== voices; ++v)
+    let   n = scale_root();
+    const s = scale_type();
+
+    chords = new Map(Array.from({length: 12}, (_, i) => [i, []]));
+
+    for (let i = 0; i!==s.length; ++i)
     {
-      if (voice_enabled(v))
+      const c = chords.get(n);
+
+      for (let v = 0; v !== voices; ++v)
       {
-        c.push(sum(s, i, i + voice_degree(v)) + voice_octave(v));
+        if (voice_enabled(v))
+        {
+          c.push(sum(s, i, i + voice_degree(v)) + voice_octave(v));
+        }
+      }
+
+      n = (n + s[i]) % 12;
+
+      if (s.length !== PluginParameters[2 + voices].maxValue)
+      {
+        for (let v = 0; v !== voices; ++v)
+        {
+          PluginParameters[2 + voices + v].maxValue      = s.length;
+          PluginParameters[2 + voices + v].numberOfSteps = s.length - 1;
+        }
+
+        UpdatePluginParameters();
       }
     }
-
-    n = (n + s[i]) % 12;
   }
 }
 
@@ -184,8 +205,8 @@ for (let v = voices; v > 0; --v)
     name:           voice_parameter_name(v-1, "Degree"),
     type:           "lin",
     minValue:       1,
-    maxValue:       24,
-    numberOfSteps:  23,
+    maxValue:       12,
+    numberOfSteps:  11,
     defaultValue:   0,
   });
 }
