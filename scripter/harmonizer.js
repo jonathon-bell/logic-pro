@@ -151,11 +151,11 @@ function Idle()
         }
       }
 
-      n = (n + s[i]) % 12;
-
+      n+= s[i]
+      n%= 12;
     }
 
-    PluginParameters[2].valueStrings = [scale_notes(),"",""];
+    PluginParameters[2].valueStrings = [scale_notes(), "", ""];
 
     if (s.length !== PluginParameters[2 + voices].maxValue)
     {
@@ -255,8 +255,9 @@ function scale_notes()
 
   for (const i of scale_type())
   {
-    n = (n + i) % 12;
-    s = s + " " + names[n];
+    n+= i
+    n%= 12;
+    s+= " " + names[n];
   }
 
   return s;
