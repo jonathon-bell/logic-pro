@@ -125,14 +125,15 @@ function Idle()
 {
   if (dirty)
   {
-    dirty = false;
-
-    let   n = scale_root();
+    const r = scale_root();
     const s = scale_type();
+    let   n = r;
+    let   m = "";
 
-    chords = new Map(Array.from({length: 12}, (_, i) => [i, []]));
+    chords  = new Map(Array.from({length: 12}, (_, i) => [i, []]));
+    dirty   = false;
 
-    for (let i = 0; i!==s.length; ++i)
+    for (let i = 0; i !== s.length; ++i)
     {
       const c = chords.get(n);
 
@@ -144,18 +145,19 @@ function Idle()
         }
       }
 
+      m += " " + note_name(n, r);
       n += s[i]
       n %= 12;
     }
 
-    PluginParameters[2].valueStrings = [scale_notes(), "", ""];
+    PluginParameters[2].valueStrings = [m, "", ""];
 
-    if (s.length !== PluginParameters[2 + voices].maxValue)
+    if (s.length !== PluginParameters[3 + voices].maxValue)
     {
-      for (let v = 0; v !== voices; ++v)
+      for (let p = 3 + voices; p !== 3 + 2 * voices; ++p)
       {
-        PluginParameters[2 + voices + v].maxValue      = s.length;
-        PluginParameters[2 + voices + v].numberOfSteps = s.length - 1;
+        PluginParameters[p].maxValue      = s.length;
+        PluginParameters[p].numberOfSteps = s.length - 1;
       }
     }
 
@@ -227,35 +229,6 @@ function scale_type()
   return scales[GetParameter(1)][0];
 }
 
-function flat_key(n)
-{
-  return 1322 & (1 << n) ? 1 : 0;
-}
-
-function note_names(k)
-{
-  return [
-    ["C", "C♯", "D", "D♯", "E", "F", "F♯", "G", "G♯", "A", "A♯", "B"],
-    ["C", "D♭", "D", "E♭", "E", "F", "G♭", "G", "A♭", "A", "B♭", "B"],
-  ][flat_key(k)];
-}
-
-function scale_notes()
-{
-  let n     = scale_root();
-  const names = note_names(n);
-  let s = names[n];
-
-  for (const i of scale_type())
-  {
-    n+= i
-    n%= 12;
-    s+= " " + names[n];
-  }
-
-  return s;
-}
-
 function voice_enabled(v)
 {
   return voice_parameter(v, "Octave") < 5;
@@ -286,6 +259,14 @@ function voice_parameter(v, p)
 function voice_parameter_name(v, p)
 {
   return "Voice " + (v + 1) + " " + p;
+}
+
+function note_name(n, r = 0)
+{
+  return [
+    ["C", "C♯", "D", "D♯", "E", "F", "F♯", "G", "G♯", "A", "A♯", "B"],
+    ["C", "D♭", "D", "E♭", "E", "F", "G♭", "G", "A♭", "A", "B♭", "B"],
+  ][1322 & (1 << r % 12) ? 1 : 0][n % 12];
 }
 
 /**
