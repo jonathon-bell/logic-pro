@@ -152,14 +152,14 @@ var PluginParameters =
 [
   {
     name:           "Scale Root",
-    type:           'menu',
+    type:           "menu",
     valueStrings:   ["C", "C♯, D♭", "D", "D♯, E♭", "E", "F", "F♯, G♭", "G", "G♯, A♭", "A", "A♯, B♭", "B"],
     defaultValue:   0,
   }
   ,
   {
     name:           "Scale Type",
-    type:           'menu',
+    type:           "menu",
     valueStrings:   scales.map((s, _) => s[1]),
     defaultValue:   0,
   }
