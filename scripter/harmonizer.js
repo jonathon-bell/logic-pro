@@ -6,7 +6,36 @@
 //*
 //*  Purpose : Harmonizes pitches using a specified scale and chord voicing.
 //*
-//*            The GUI specifies a Scale as:
+//*
+//*  Glossary: We use the following terminology here:
+//*
+//*   pitch    An integer in the range [0, 128) representing an even tempered
+//*            pitch; the value of the 'pitch' attribute of a 'Note' event.
+//*
+//*   note     An integer in the range [0, 12) representing the set of pitches
+//*            { n + 12 * i | i ∊ ℤ }.
+//*
+//*   interval The integral number of half-steps between two notes or pitches.
+//*
+//*   type     A sequence of intervals that sums to 12.
+//*
+//*   root     The first note of a scale.
+//*
+//*   scale    A sequence of one or more distinct notes, arranged in ascending
+//*            cyclic order; specified as a <root, type> pair.
+//*
+//*   degree   An index into a scale type, and thus a number of scale steps to
+//*            ascend from a pitch when harmonizing it.
+//*
+//*   octave   An integral number of octaves with which to further offset the
+//*            harmonized pitch.
+//*
+//*   voice    Describes how to construct single harmony with which to augment
+//*            the incoming pitch; specified as a <degree, octave> pair.
+//*
+//*   voicing  A (possibly empty) set of voices.
+//*
+//*  Overview: The GUI specifies a Scale as:
 //*
 //*              a Root note, represented as an integer in the range [0, 12).
 //*
@@ -26,7 +55,7 @@
 //*                                                                   (| v |)
 //**********************************************************************w*w***
 
-const scales =
+const scale_types =
 [
   [[1,1,1,1,1,1,1,1,1,1,1,1], "Chromatic"                                   ],
 
@@ -177,7 +206,7 @@ var PluginParameters =
   {
     name:           "Scale Type",
     type:           "menu",
-    valueStrings:   scales.map((s, _) => s[1]),
+    valueStrings:   scale_types.map((s, _) => s[1]),
     defaultValue:   0,
   }
   ,
@@ -224,7 +253,7 @@ function scale_root()
 
 function scale_type()
 {
-  return scales[GetParameter(1)][0];
+  return scale_types[GetParameter(1)][0];
 }
 
 function voice_enabled(v)
