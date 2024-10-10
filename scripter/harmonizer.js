@@ -9,10 +9,10 @@
 //*
 //*  Glossary: We use the following terminology here:
 //*
-//*   pitch    An integer in the range [0, 128) representing an even tempered
+//*   pitch    An integer in the range [0, 127] representing an even tempered
 //*            pitch; the value of the 'pitch' attribute of a 'Note' event.
 //*
-//*   note     An integer in the range [0, 12) representing the set of pitches
+//*   note     An integer in the range [0, 11] representing the set of pitches
 //*            { n + 12 * i | i ∊ ℤ }.
 //*
 //*   interval The integral number of half-steps between two notes or pitches.
@@ -30,27 +30,27 @@
 //*   octave   An integral number of octaves with which to further offset the
 //*            harmonized pitch.
 //*
-//*   voice    Describes how to construct single harmony with which to augment
+//*   voice    Describes how to create a single harmony with which to augment
 //*            the incoming pitch; specified as a <degree, octave> pair.
 //*
 //*   voicing  A (possibly empty) set of voices.
 //*
-//*  Overview: The GUI specifies a Scale as:
+//*   chord    A (possibly empty) set of intervals.
 //*
-//*              a Root note, represented as an integer in the range [0, 12).
+//*  Overview: The GUI specifies a scale as a root note and scale-type pair,
+//*            and a voicing as a set of voices, each comprising a degree and
+//*            octave pair.
 //*
-//*              a Scale Type, represented as a sequence of positive integers
-//*              that sums to 12.
+//*            The function 'ParameterChanged' compiles the specification into
+//*            a map that associates each of the 12 notes with a chord; a note
+//*            contained within the specified scale maps to the diatonic chord
+//*            rooted at that note, while other notes map to the empty chord.
 //*
-//*            and a Chord Voicing as a set of Voices, each comprising:
-//*
-//*              a Degree, represented as a positive integral number of scale
-//*              steps to transpose the incoming pitch by.
-//*
-//*              an Octave, an integral offset.
+//*            This representation minimizes the work of 'HandleEvent'.
 //*
 //*  See Also: https://www.musios.app/logic-pro-scripter/
 //*            for an alternate description of the Logic Pro Scripter API.
+//*
 //*                                                                     0-0
 //*                                                                   (| v |)
 //**********************************************************************w*w***
@@ -121,10 +121,28 @@ const scale_types =
   [[3,2,2,3,2],               "Minor Pentatonic"                            ],
 ];
 
-const voices  = 6;
-var   chords  = undefined;
-var   dirty   = false;
+/**
+ * The maximum number of voices to include in the specified chord voicing.
+ */
+const voices = 6;
 
+/**
+ * A map of type note -> chord.
+ */
+var chords = undefined;
+
+/**
+ * True if chord map is no longer synchronized with the GUI.
+ *
+ * Signals to the idle thread that the chord map needs to be recompiled.
+ *
+ * Used to avoid 'ParamaterCHanged' from recursing.
+ */
+var dirty  = false;
+
+/**
+ * @parm e The event to process.
+ */
 function HandleMIDI(e)
 {
   if (e instanceof Note)
@@ -143,11 +161,20 @@ function HandleMIDI(e)
   }
 }
 
+/**
+ * Invalidate the chord map, signaling to 'Idle' that it must recompile it.
+ *
+ * @parm p The index of the parameter that has changed.
+ * @parm v The value of the parameter that has changed.
+ */
 function ParameterChanged(_, _)
 {
   dirty = true;
 }
 
+/**
+ * Recompile the chord map if it is no longer valid.
+ */
 function Idle()
 {
   if (dirty)
@@ -246,31 +273,65 @@ for (let v = voices; v > 0; --v)
 
 //****************************************************************************
 
+/**
+ * The currently selected scale root.
+ */
 function scale_root()
 {
   return GetParameter(0);
 }
 
+/**
+ * The currently selected scale type.
+ */
 function scale_type()
 {
   return scale_types[GetParameter(1)][0];
 }
 
+/**
+ * True if the given voice is enabled (i.e. not "Off").
+ *
+ * @param  v  The specified voice.
+ */
 function voice_enabled(v)
 {
   return voice_parameter(v, "Octave") < 5;
 }
 
+/**
+ * The integral number of half steps to offset the harmonized pitch associated
+ * with this voice.
+ *
+ * @param  v  The specified voice.
+ *
+ * @return An integer in the range [-24, +24].
+ */
 function voice_octave(v)
 {
   return [+24, +12, 0, -12, -24][voice_parameter(v, "Octave")];
 }
 
+/**
+ * The number of scale steps to ascend when harmonizing a pitch.
+ *
+ * @param  v  The specified voice.
+ *
+ * @return An integer in the range [0, scale_type().length)].
+ */
 function voice_degree(v)
 {
   return voice_parameter(v, "Degree") - 1;
 }
 
+/**
+ * The index of the given parameter of the given voice.
+ *
+ * @param  v  The given voice.
+ * @param  p  The given voice parameter; "Degree" or "Octave".
+ *
+ * @return An integer in the range [0, scale_type().length)].
+ */
 function voice_parameter_index(v, p)
 {
   return 3
@@ -278,16 +339,40 @@ function voice_parameter_index(v, p)
        + (voices - v - 1)
 }
 
+/**
+ * The value of the given parameter of the given voice.
+ *
+ * @param  v  The given voice.
+ * @param  p  The given voice parameter; "Degree" or "Octave".
+ *
+ * @return The value of the given voice parameter.
+ */
 function voice_parameter(v, p)
 {
   return GetParameter(voice_parameter_index(v, p));
 }
 
+/**
+ * The name of the given parameter of the given voice.
+ *
+ * @param  v  The given voice.
+ * @param  p  The given voice parameter; "Degree" or "Octave".
+ *
+ * @return The name of the given voice parameter.
+ */
 function voice_parameter_name(v, p)
 {
   return "Voice " + (v + 1) + " " + p;
 }
 
+/**
+ * The name of the given note, seen as an element of the given key.
+ *
+ * @param  n  The given note.
+ * @param  r  The root note of the parent key.
+ *
+ * @return The name of the given note.
+ */
 function note_name(n, r = 0)
 {
   return [
@@ -297,7 +382,7 @@ function note_name(n, r = 0)
 }
 
 /**
- * Sums the elements of the given array with indices in the range '[i, j)'.
+ * Sums the elements of the given array with indices in the range [i, j).
  *
  * Indices 'wrap around' at the end of the array.
  *
@@ -313,7 +398,7 @@ function note_name(n, r = 0)
  * @param  i  An index to sum from.
  * @param  j  An index to sum to.
  *
- * @return The sum of the elements of 'a' with indices in the range '[i, j)'.
+ * @return The sum of the elements of 'a' with indices in the range [i, j).
  */
 function sum(a, i, j)
 {
