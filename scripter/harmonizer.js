@@ -15,9 +15,9 @@
 //*   note     An integer in the range [0, 11] representing the set of pitches
 //*            { n + 12 * i | i ∊ ℤ }.
 //*
-//*   interval The integral number of half-steps between two notes or pitches.
+//*   interval The natural number of half-steps between two notes or pitches.
 //*
-//*   type     A sequence of intervals that sums to 12.
+//*   type     A sequence of non-zero intervals that sums to 12.
 //*
 //*   root     The first note of a scale.
 //*
@@ -122,47 +122,49 @@ const scale_types =
 ];
 
 /**
- * The maximum number of voices to include in the specified chord voicing.
+ * The maximum number of voices available in a voicing.
  */
-const voices = 6;
+const voices = 7;
 
 /**
- * A map of type note -> chord.
+ * Maps each note of the chromatic scale to a chord of the current scale.
  */
 var chords = undefined;
 
 /**
- * True if chord map is no longer synchronized with the GUI.
+ * True if the chord map is no longer synchronized with the GUI.
  *
- * Signals to the idle thread that the chord map needs to be recompiled.
+ * Signals to the idle thread that the chord map needs recompiling.
  *
- * Used to avoid 'ParamaterCHanged' from recursing.
+ * Used to avoid the function 'ParamaterCHanged' from recursing.
  */
-var dirty  = false;
+var dirty = false;
 
 /**
+ * Retrieves the chord associated with an incoming pitch and instantiates it.
+ *
  * @parm e The event to process.
  */
 function HandleMIDI(e)
 {
-  if (e instanceof Note)
+  if (e instanceof Note)                                 // Some sort of Note?
   {
-    const p = e.pitch;
+    const p = e.pitch;                                   // ...save its pitch
 
-    for (const i of chords.get(p % 12))
+    for (const i of chords.get(p % 12))                  // ....each interval
     {
-      e.pitch = p + i;
-      e.send();
+      e.pitch = p + i;                                   // .....adjust pitch
+      e.send();                                          // .....and send it
     }
   }
   else
   {
-    e.send();
+    e.send();                                            // ...send as normal
   }
 }
 
 /**
- * Invalidate the chord map, signaling to 'Idle' that it must recompile it.
+ * Invalidates the chord map, signaling to 'Idle' that it must recompile it.
  *
  * @parm p The index of the parameter that has changed.
  * @parm v The value of the parameter that has changed.
@@ -173,38 +175,48 @@ function ParameterChanged(_, _)
 }
 
 /**
- * Recompile the chord map if it is no longer valid.
+ * Recompiles the chord map, but only if it is no longer valid.
  */
 function Idle()
 {
-  if (dirty)
+  if (dirty)                                             // Needs recompiling?
   {
-    const r = scale_root();
-    const s = scale_type();
-    let   n = r;
-    let   m = "";
+    const r = scale_root();                              // ...selected root
+    const s = scale_type();                              // ...selected type
+    let   n = r;                                         // ...current note
+    let   m = "";                                        // ...scale string
 
-    chords  = new Map(Array.from({length: 12}, (_, i) => [i, []]));
-    dirty   = false;
+    /* Map every note to the empty chord...*/
 
-    for (let i = 0; i !== s.length; ++i)
+    chords = new Map(Array.from({length: 12}, (_, i) => [i, []]));
+    dirty  = false;
+
+    /* For each not of the selected scale...*/
+
+    for (let i = 0; i !== s.length; ++i)                 // ...for each note
     {
-      const c = chords.get(n);
+      const c = chords.get(n);                           // ....fetch chord
 
-      for (let v = 0; v !== voices; ++v)
+      for (let v = 0; v !== voices; ++v)                 // ....for each voice
       {
-        if (voice_enabled(v))
+        if (voice_enabled(v))                            // .....include it?
         {
+          /* Calculate the iterval above an incoming pitch at which this
+             voice sounds...*/
+
           c.push(sum(s, i, i + voice_degree(v)) + voice_octave(v));
         }
       }
 
-      m += " " + note_name(n, r);
-      n += s[i]
-      n %= 12;
+      m += " " + note_name(n, r);                        // ....add note name
+      n += s[i]                                          // ....next note
+      n %= 12;                                           // ....wrap around
     }
 
-    PluginParameters[2].valueStrings = [m, "", ""];
+    PluginParameters[2].valueStrings = [m, "", ""];      // ...scale notes
+
+    /* If the length og the selected scale is changing, adjust the range
+       of the voice degree sliders...*/
 
     if (s.length !== PluginParameters[3 + voices].maxValue)
     {
@@ -215,7 +227,7 @@ function Idle()
       }
     }
 
-    UpdatePluginParameters();
+    UpdatePluginParameters();                            // ...redraw the GUI
   }
 }
 
@@ -317,7 +329,7 @@ function voice_octave(v)
  *
  * @param  v  The specified voice.
  *
- * @return An integer in the range [0, scale_type().length)].
+ * @return An integer in the range [0, 'scale_type().length').
  */
 function voice_degree(v)
 {
@@ -330,7 +342,7 @@ function voice_degree(v)
  * @param  v  The given voice.
  * @param  p  The given voice parameter; "Degree" or "Octave".
  *
- * @return An integer in the range [0, scale_type().length)].
+ * @return The index of the given voice parameter.
  */
 function voice_parameter_index(v, p)
 {
@@ -367,6 +379,10 @@ function voice_parameter_name(v, p)
 
 /**
  * The name of the given note, seen as an element of the given key.
+ *
+ * The integer '1322' is acting as a 12 bit set; a bit set in the position 'r'
+ * indicates that 'r' is the root of a key whose accidentals are traditionally
+ * expressed as flats rather than sharps.
  *
  * @param  n  The given note.
  * @param  r  The root note of the parent key.
