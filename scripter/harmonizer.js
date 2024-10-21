@@ -46,7 +46,8 @@
 //*            contained within the specified scale maps to the diatonic chord
 //*            rooted at that note, while other notes map to the empty chord.
 //*
-//*            This representation minimizes the work of 'HandleEvent'.
+//*            This representation minimizes the work that 'HandleEvent' needs
+//*            to perform for each 'Note' event.
 //*
 //*  See Also: https://www.musios.app/logic-pro-scripter/
 //*            for an alternate description of the Logic Pro Scripter API.
@@ -134,7 +135,7 @@ var chords = undefined;
 /**
  * True if the chord map is no longer synchronized with the GUI.
  *
- * Signals to the idle thread that the GUI needs to be updated.
+ * Signals to the idle thread that the GUI needs updating.
  *
  * Used to avoid the function 'ParameterChanged' from recursing.
  */
@@ -182,7 +183,7 @@ function ParameterChanged(p, v)
 
   chords = new Map(Array.from({length: 12}, (_, i) => [i, []]));
 
-  /* For each note of the selected scale, update its chord...*/
+  /* Now, for each note of the selected scale, update its chord...*/
 
   for (let i = 0; i !== s.length; ++i)                   // For each scale tone
   {
@@ -211,7 +212,7 @@ function ParameterChanged(p, v)
     PluginParameters[2].valueStrings = [m, "", ""];    // ...update the notes
 
     /* If the length of the selected scale has changed, adjust the range of
-      each voice degree slider...*/
+      the degree sliders...*/
 
     if (s.length !== PluginParameters[3 + voices].maxValue)
     {
