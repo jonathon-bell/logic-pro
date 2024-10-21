@@ -136,7 +136,7 @@ var chords = undefined;
  *
  * Signals to the idle thread that the chord map needs recompiling.
  *
- * Used to avoid the function 'ParamaterCHanged' from recursing.
+ * Used to avoid the function 'ParamaterChanged' from recursing.
  */
 var dirty = false;
 
@@ -191,7 +191,7 @@ function Idle()
     chords = new Map(Array.from({length: 12}, (_, i) => [i, []]));
     dirty  = false;
 
-    /* For each not of the selected scale...*/
+    /* For each note of the selected scale...*/
 
     for (let i = 0; i !== s.length; ++i)                 // ...for each note
     {
@@ -215,8 +215,8 @@ function Idle()
 
     PluginParameters[2].valueStrings = [m, "", ""];      // ...scale notes
 
-    /* If the length og the selected scale is changing, adjust the range
-       of the voice degree sliders...*/
+    /* If the length of the selected scale has changed, adjust the range of
+       each voice degree slider...*/
 
     if (s.length !== PluginParameters[3 + voices].maxValue)
     {
@@ -282,6 +282,8 @@ for (let v = voices; v > 0; --v)
     defaultValue:   0,
   });
 }
+
+Trace("Harmonizer 1.1 - https://github.com/jonathon-bell/logic-pro/")
 
 //****************************************************************************
 
