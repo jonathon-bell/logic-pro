@@ -134,9 +134,9 @@ var chords = undefined;
 /**
  * True if the chord map is no longer synchronized with the GUI.
  *
- * Signals to the idle thread that the chord map needs recompiling.
+ * Signals to the idle thread that the GUI needs to be updated.
  *
- * Used to avoid the function 'ParamaterChanged' from recursing.
+ * Used to avoid the function 'ParameterChanged' from recursing.
  */
 var dirty = false;
 
