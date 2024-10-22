@@ -173,7 +173,7 @@ function HandleMIDI(e)
  */
 function ParameterChanged(p, v)
 {
-  dirty = false;                                         // Avoid a recursion
+  dirty   = false;                                       // Avoid a recursion
   const r = scale_root();                                // The selected root
   const s = scale_type();                                // The selected type
   let   n = r;                                           // The current note
