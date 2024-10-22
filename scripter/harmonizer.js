@@ -46,7 +46,8 @@
 //*            contained within the specified scale maps to the diatonic chord
 //*            rooted at that note, while other notes map to the empty chord.
 //*
-//*            This representation minimizes the work of 'HandleEvent'.
+//*            This representation minimizes the work that 'HandleEvent' needs
+//*            to perform for each 'Note' event.
 //*
 //*  See Also: https://www.musios.app/logic-pro-scripter/
 //*            for an alternate description of the Logic Pro Scripter API.
@@ -132,11 +133,16 @@ const voices = 7;
 var chords = undefined;
 
 /**
+ * Maps each pitch to the chord that was active when it last sounded.
+ */
+var active = new Map();
+
+/**
  * True if the chord map is no longer synchronized with the GUI.
  *
- * Signals to the idle thread that the chord map needs recompiling.
+ * Signals to the idle thread that the GUI needs updating.
  *
- * Used to avoid the function 'ParamaterCHanged' from recursing.
+ * Used to avoid the function 'ParameterChanged' from recursing.
  */
 var dirty = false;
 
@@ -147,11 +153,23 @@ var dirty = false;
  */
 function HandleMIDI(e)
 {
-  if (e instanceof Note)                                 // Some sort of Note?
+  if (e instanceof Note)                                 // Some kind of Note?
   {
-    const p = e.pitch;                                   // ...save its pitch
+    const p = e.pitch;                                   // ...the event pitch
+    let   c;                                             // ...the event chord
 
-    for (const i of chords.get(p % 12))                  // ....each interval
+    if (e instanceof NoteOn)                             // ...is a 'NoteOn'?
+    {
+      c = chords.get(p % 12);                            // ....get its chord
+
+      active.set(p, c);                                  // ....save as active
+    }
+    else                                                 // ...is a 'NoteOff'
+    {
+      c = active.get(p);                                 // ....get its chord
+    }
+
+    for (const i of c)                                   // ...for each intval
     {
       e.pitch = p + i;                                   // .....adjust pitch
       e.send();                                          // .....and send it
@@ -164,59 +182,54 @@ function HandleMIDI(e)
 }
 
 /**
- * Invalidates the chord map, signaling to 'Idle' that it must recompile it.
+ * Recompiles the chord map, and signals to 'Idle' that it may need to update
+ * the GUI.
  *
  * @parm p The index of the parameter that has changed.
  * @parm v The value of the parameter that has changed.
  */
-function ParameterChanged(_, _)
+function ParameterChanged(p, v)
 {
-  dirty = true;
-}
+  dirty   = false;                                       // Avoid a recursion
+  const r = scale_root();                                // The selected root
+  const s = scale_type();                                // The selected type
+  let   n = r;                                           // The current note
+  let   m = "";                                          // The scale string
 
-/**
- * Recompiles the chord map, but only if it is no longer valid.
- */
-function Idle()
-{
-  if (dirty)                                             // Needs recompiling?
+  /* Map each note of the chromatic scale to the empty chord...*/
+
+  chords = new Map(Array.from({length: 12}, (_, i) => [i, []]));
+
+  /* Now, for each note of the selected scale, update its chord...*/
+
+  for (let i = 0; i !== s.length; ++i)                   // For each scale tone
   {
-    const r = scale_root();                              // ...selected root
-    const s = scale_type();                              // ...selected type
-    let   n = r;                                         // ...current note
-    let   m = "";                                        // ...scale string
+    const c = chords.get(n);                             // ...fetch its chord
 
-    /* Map every note to the empty chord...*/
-
-    chords = new Map(Array.from({length: 12}, (_, i) => [i, []]));
-    dirty  = false;
-
-    /* For each not of the selected scale...*/
-
-    for (let i = 0; i !== s.length; ++i)                 // ...for each note
+    for (let v = 0; v !== voices; ++v)                   // ...for each voice
     {
-      const c = chords.get(n);                           // ....fetch chord
-
-      for (let v = 0; v !== voices; ++v)                 // ....for each voice
+      if (voice_enabled(v))                              // ....is it enabled?
       {
-        if (voice_enabled(v))                            // .....include it?
-        {
-          /* Calculate the iterval above an incoming pitch at which this
-             voice sounds...*/
+        /* Compute the interval above an incoming pitch at which this voice
+           sounds...*/
 
-          c.push(sum(s, i, i + voice_degree(v)) + voice_octave(v));
-        }
+        c.push(sum(s, i, i + voice_degree(v)) + voice_octave(v));
       }
-
-      m += " " + note_name(n, r);                        // ....add note name
-      n += s[i]                                          // ....next note
-      n %= 12;                                           // ....wrap around
     }
 
-    PluginParameters[2].valueStrings = [m, "", ""];      // ...scale notes
+    m += " " + note_name(n, r);                         // ...append note name
+    n += s[i]                                           // ...advance the note
+    n %= 12;                                            // ...and wrap around
+  }
 
-    /* If the length og the selected scale is changing, adjust the range
-       of the voice degree sliders...*/
+  /* If the selected scale has just changed, we must also update the GUI...*/
+
+  if (p == 0 || p ==1)                                 // Has scale changed?
+  {
+    PluginParameters[2].valueStrings = [m, "", ""];    // ...update the notes
+
+    /* If the length of the selected scale has changed, adjust the range of
+      the degree sliders...*/
 
     if (s.length !== PluginParameters[3 + voices].maxValue)
     {
@@ -227,7 +240,18 @@ function Idle()
       }
     }
 
-    UpdatePluginParameters();                            // ...redraw the GUI
+    dirty = true;                                        // ...update the GUI
+  }
+}
+
+/**
+ * Update the GUI if the selected scale has changed.
+ */
+function Idle()
+{
+  if (dirty)                                             // No longer in sync?
+  {
+    UpdatePluginParameters();                            // ...update the GUI
   }
 }
 
@@ -282,6 +306,8 @@ for (let v = voices; v > 0; --v)
     defaultValue:   0,
   });
 }
+
+Trace("Harmonizer 1.1 - https://github.com/jonathon-bell/logic-pro/")
 
 //****************************************************************************
 
