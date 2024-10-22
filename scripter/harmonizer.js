@@ -133,6 +133,11 @@ const voices = 7;
 var chords = undefined;
 
 /**
+ * Maps each pitch to the chord that was active when it last sounded.
+ */
+var active = new Map();
+
+/**
  * True if the chord map is no longer synchronized with the GUI.
  *
  * Signals to the idle thread that the GUI needs updating.
@@ -148,11 +153,23 @@ var dirty = false;
  */
 function HandleMIDI(e)
 {
-  if (e instanceof Note)                                 // Some sort of Note?
+  if (e instanceof Note)                                 // Some kind of Note?
   {
-    const p = e.pitch;                                   // ...save its pitch
+    const p = e.pitch;                                   // ...the event pitch
+    let   c;                                             // ...the event chord
 
-    for (const i of chords.get(p % 12))                  // ....each interval
+    if (e instanceof NoteOn)                             // ...is a 'NoteOn'?
+    {
+      c = chords.get(p % 12);                            // ....get its chord
+
+      active.set(p, c);                                  // ....save as active
+    }
+    else                                                 // ...is a 'NoteOff'
+    {
+      c = active.get(p);                                 // ....get its chord
+    }
+
+    for (const i of c)                                   // ...for each intval
     {
       e.pitch = p + i;                                   // .....adjust pitch
       e.send();                                          // .....and send it
